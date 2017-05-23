@@ -1,8 +1,16 @@
 <?php
   
     session_start();
-    if(isset($_SESSION['user'])){  
-          header("location: welcome.php"); 
+    if(!isset($_SESSION['user'])){  
+        echo '<script language="javascript">';
+          echo 'alert("What? Dude login first :P")';
+          echo '</script>';   
+          header("Refresh: 1; url=index.php"); 
+          exit();
+    }
+    else{
+      $email = $_SESSION['user'];
+      $id = $_SESSION['id'];
     }
 ?>
 
@@ -13,7 +21,7 @@
 	<meta charset="utf-8">
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title> Contacts Book</title>
+	<title> Add New Contact</title>
 	<!--Stylesheets-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="css/style.css"/>
@@ -44,40 +52,64 @@
 
       
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="index.php">Login</a></li>
-        <li><a href="signup.php">SignUp</a></li>
+        <li><a href=""><?php echo $email ?></a></li>
+        <li><a href="logout.php">Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-  <h3 class="text-center"> Login Now to access your contacts </h3>
+  <h3 class="text-center"> Add New Contact </h3>
   <br>
  
- <form class="form-horizontal" method="POST" action="logincheck.php">
+ <form class="form-horizontal" method="POST" action="addnewcontact.php">
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+    <label for="inputText2" class="col-sm-2 control-label">Name</label>
     <div class="col-sm-8">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email">
+      <input type="text" class="form-control" id="inputText2" placeholder="Name" name="name" required>
     </div>
   </div>
   <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+    <label for="inputText3" class="col-sm-2 control-label">Address</label>
     <div class="col-sm-8">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="password">
+      <input type="text" class="form-control" id="inputText3" placeholder="Address" name="address">
     </div>
   </div>
+  <div class="form-group">
+    <label for="inputText4" class="col-sm-1 col-sm-offset-1 control-label">Phone</label>
+      <div class="col-sm-3">
+        <input type="number" class="form-control" id="inputText4" placeholder="Phone" name="phone" required>
+      </div>
+    <label for="inputText5" class="col-sm-1 control-label">E-Mail</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="inputText5" placeholder="E-Mail" name="email">
+      </div>
+  </div>
+
+  <div class="form-group">
+    <label for="exampleSelect1" class="col-sm-2 control-label" >Group</label>
+    <div class="col-sm-3">
+    <select class="form-control" id="exampleSelect1" name="group">
+      <option value="Friends">Friends</option>
+      <option value="Business">Business</option>
+      <option value="Family">Family</option>
+      <option value="College">College</option>
+    </select>
+    </div>
+  </div>
+
   
   <div class="form-group text-center" style="margin-left: 12%;">
     <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary" name="submit1">LogIn</button>
+      <a href="welcome.php" class="btn btn-danger" role="button">Cancel</a>
+      <button type="submit" class="btn btn-primary" name="submit2">Submit</button>
     </div>
   </div>
+
 </form>
 
 <br>
 
-<h5 class="text-center"> Don't have an account?<a href="signup.php"> SignUp Here </a></h5>
    
 <!-- Scripts -->
 
