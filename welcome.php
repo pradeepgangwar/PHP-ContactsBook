@@ -121,6 +121,13 @@
         $conn = null;
 ?>
 
+<footer class="footer">
+      <div class="container">
+        <b><p class="text-muted" style="float: left;">&copy; Pradeep 2017</p></b>
+        <a href="https://github.com/pradeepgangwar/PHP-ContactsBook" class="btn btn-success btn-xs text-muted" role="button" style="float: right;"> Source Code </a> 
+        <b><p class="text-muted" style="float: right; padding-right: 10px;">GitHub:</p></b>        
+      </div>
+    </footer>
  
 
 <!-- Scripts -->
