@@ -33,9 +33,9 @@
 
         try {
             $servername = "localhost";
-            $username = "id1769632_root";
-            $password = "contactsbookpradeep";
-            $dbname = "id1769632_address";
+            $username = "root";
+            $password = "";
+            $dbname = "address";
             $tbname = "contacts";
 
             $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
