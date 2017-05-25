@@ -12,6 +12,7 @@
         echo 'alert("Access Denied")';
         echo '</script>';   
         header("Refresh: 1; url=index.php");
+        exit();
     }
 
     else{

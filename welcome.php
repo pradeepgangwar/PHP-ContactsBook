@@ -10,7 +10,7 @@
 		}
 		else{
 			$email = $_SESSION['user'];
-      $id = $_SESSION['id'];
+      		$id = $_SESSION['id'];
 		}
 ?>
 
@@ -59,8 +59,68 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-  <h3 class="text-center"> See Your Contacts below: </h3>
+<div class="text-center">
+  <a href="newcontact.php" class="btn btn-success" role="button">Add New Contact</a>
+</div>
+
+  <h2 class="text-center"> <b> See Your Contacts below: </b></h2>
   <br>
+
+
+  <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "address";
+        $tbname = "contacts";
+
+        try {
+          $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        
+          $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          
+          $stmt = $conn->prepare("SELECT * FROM $tbname WHERE user = :id");
+          $stmt->execute(['id' => $id]);
+          $result = $stmt->fetchAll();
+
+          	if($result != Null){
+	            echo '<table class="table table-hover table-responsive" id="contacttable">';
+	            echo '<thead>';
+	            echo '<tr>';
+	            echo '<th>Name</th><th>Address</th><th>Email</th><th>Phone</th><th>Group</th><th>Option</th>';
+	            echo '</tr>';
+	            echo '</thead>';
+	            echo '<tbody>';
+	            foreach ($result as $out){
+	                echo '<tr>';
+	                echo '<td>' .$out['name']. '</td>';
+	                echo '<td>' .$out['address']. '</td>';
+	                echo '<td>' .$out['email']. '</td>';
+	                echo '<td>' .$out['phone']. '</td>';
+	                echo '<td>' .$out['localgroup']. '</td>';
+	                echo '<td> <a href="contactsedit.php?id=' .$out['id']. '&user=' .$out['user']. '" class="btn btn-primary btn-xs" role="button"> Edit </a>  <a href="contactsdelete.php?id=' .$out['id']. '&user=' .$out['user']. '"class="btn btn-danger btn-xs" role="button"> Delete </a> </td>';
+	                echo '</tr>';
+	            }
+	            echo '</tbody></table>';
+          	}
+          	else{
+          		echo '<h3 class="text-center" style="color: red;"> No contacts to display</h3>';
+          	}
+
+          
+        }
+
+      
+        catch(PDOException $e){
+              echo '<script language="javascript">';
+              echo '$sql . "<br>" . $e->getMessage();';
+              echo '</script>';   
+              header("Refresh: 1; url=index.php");
+          }
+
+        $conn = null;
+?>
+
  
 
 <!-- Scripts -->

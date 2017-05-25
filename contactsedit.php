@@ -1,16 +1,59 @@
 <?php
   
     session_start();
+    $user_id = $_GET['user'];
+    $idpass = $_GET['id'];
+    $id = $_SESSION['id'];
+
     if(!isset($_SESSION['user'])){  
         echo '<script language="javascript">';
-          echo 'alert("What? Dude login first :P")';
-          echo '</script>';   
-          header("Refresh: 1; url=index.php"); 
-          exit();
+        echo 'alert("What? Dude login first :P")';
+        echo '</script>';   
+        header("Refresh: 1; url=index.php"); 
+        exit();
+    }
+    elseif ($user_id != $id) {
+        echo '<script language="javascript">';
+        echo 'alert("You are not allowed to access this")';
+        echo '</script>';   
+        header("Refresh: 1; url=index.php"); 
+        exit();
     }
     else{
-      $email = $_SESSION['user'];
-      $id = $_SESSION['id'];
+        $email = $_SESSION['user'];
+        $_SESSION['editid'] = $idpass;
+
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "address";
+        $tbname = "contacts";
+
+        try {
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("SELECT * FROM $tbname WHERE id = :id");
+            $stmt->execute(['id' => $idpass]);
+            $query = $stmt->fetch(PDO::FETCH_ASSOC);        
+        }
+        catch(PDOException $e){
+                echo '<script language="javascript">';
+                echo '$sql . "<br>" . $e->getMessage();';
+                echo '</script>';   
+                header("Refresh: 1; url=index.php");
+            }
+
+        if ($query['user'] != $id) {
+            echo '<script language="javascript">';
+            echo 'alert("You are not allowed to access this")';
+            echo '</script>';   
+            header("Refresh: 1; url=index.php"); 
+            exit();
+        }
+
+        $conn = null;
     }
 ?>
 
@@ -21,7 +64,7 @@
 	<meta charset="utf-8">
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title> Add New Contact</title>
+	<title> Edit Contact</title>
 	<!--Stylesheets-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="css/style.css"/>
@@ -59,30 +102,30 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-  <h3 class="text-center"> Add New Contact </h3>
+  <h3 class="text-center"> Edit Contact <b> <?php echo $query['name']; ?> </b> </h3>
   <br>
  
- <form class="form-horizontal" method="POST" action="addnewcontact.php">
+ <form class="form-horizontal" method="POST" action="contactseditconfirm.php">
   <div class="form-group">
     <label for="inputText2" class="col-sm-2 control-label">Name</label>
     <div class="col-sm-8">
-      <input type="text" class="form-control" id="inputText2" placeholder="Name" name="name" required>
+      <input type="text" class="form-control" id="inputText2" placeholder="Name" name="name" value="<?php echo $query['name']; ?>" required>
     </div>
   </div>
   <div class="form-group">
-    <label for="inputText3" class="col-sm-2 control-label">Address</label>
+    <label for="inputText3" class="col-sm-2 control-label" >Address</label>
     <div class="col-sm-8">
-      <input type="text" class="form-control" id="inputText3" placeholder="Address" name="address">
+      <input type="text" class="form-control" id="inputText3" placeholder="Address" name="address" value="<?php echo $query['address']; ?>">
     </div>
   </div>
   <div class="form-group">
-    <label for="inputText4" class="col-sm-1 col-sm-offset-1 control-label">Phone</label>
+    <label for="inputText4" class="col-sm-1 col-sm-offset-1 control-label" >Phone</label>
       <div class="col-sm-3">
-        <input type="number" class="form-control" id="inputText4" placeholder="Phone" name="phone" required>
+        <input type="number" class="form-control" id="inputText4" placeholder="Phone" name="phone" value="<?php echo $query['phone']; ?>" required>
       </div>
     <label for="inputText5" class="col-sm-1 control-label">E-Mail</label>
       <div class="col-sm-4">
-        <input type="text" class="form-control" id="inputText5" placeholder="E-Mail" name="email">
+        <input type="text" class="form-control" id="inputText5" placeholder="E-Mail" name="email" value="<?php echo $query['email']; ?>">
       </div>
   </div>
 
@@ -90,10 +133,10 @@
     <label for="exampleSelect1" class="col-sm-2 control-label" >Group</label>
     <div class="col-sm-3">
     <select class="form-control" id="exampleSelect1" name="group">
-      <option value="Friends">Friends</option>
-      <option value="Business">Business</option>
-      <option value="Family">Family</option>
-      <option value="College">College</option>
+      <option value="Friends" <?php if ($query['localgroup']=='Friends') echo 'selected="selected"';?>>Friends</option>
+      <option value="Business" <?php if ($query['localgroup']=='Business') echo 'selected="selected"';?>>Business</option>
+      <option value="Family" <?php if ($query['localgroup']=='Family') echo 'selected="selected"';?>>Family</option>
+      <option value="College" <?php if ($query['localgroup']=='College') echo 'selected="selected"';?>>College</option>
     </select>
     </div>
   </div>
@@ -102,7 +145,7 @@
   <div class="form-group text-center" style="margin-left: 12%;">
     <div class="col-sm-10">
       <a href="index.php" class="btn btn-danger" role="button">Cancel</a>
-      <button type="submit" class="btn btn-primary" name="submit2">Submit</button>
+      <button type="submit" class="btn btn-primary" name="submit6">Edit</button>
     </div>
   </div>
 
